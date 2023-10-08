@@ -1,4 +1,5 @@
 import { Vector } from "../interfaces";
+import { Command } from "./Command";
 
 export interface IMovable {
   getPosition: () => Vector;
@@ -7,24 +8,25 @@ export interface IMovable {
   setPosition: (value: Vector) => void;
 }
 
-export class MoveCommand {
+export class MoveCommand extends Command {
   movable: IMovable;
 
   constructor(movable: IMovable) {
+    super();
     this.movable = movable;
   }
 
   public execute() {
-    const position = this.movable.getPosition();
-    const velocity = this.movable.getVelocity();
+    let position = this.movable.getPosition();
+    let velocity = this.movable.getVelocity();
 
-    if (position && (!position?.x || !position?.y)) {
+    if (!position || !position?.x || !position?.y) {
       throw new Error(
         "Попытка сдвинуть объект, у которого невозможно прочитать положение в пространстве"
       );
     }
 
-    if (velocity && (!velocity?.x || !velocity?.y)) {
+    if (!velocity || !velocity?.x || !velocity?.y) {
       throw new Error(
         "Попытка сдвинуть объект, у которого невозможно прочитать значение мгновенной скорости"
       );

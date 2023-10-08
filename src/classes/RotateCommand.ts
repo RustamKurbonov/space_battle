@@ -1,38 +1,41 @@
+import { Command } from "./Command";
+
 export interface IRotable {
   getDirection: () => number;
   getAngularVelocity: () => number;
   getDirectionsNumber: () => number;
 
-  setDirection: (direction: number) => void;
+  setDirection: (value: number) => void;
 }
 
-export class RotateCommand {
+export class RotateCommand extends Command {
   rotable: IRotable;
 
   constructor(rotable: IRotable) {
+    super();
     this.rotable = rotable;
   }
 
   public execute() {
-    const direction = this.rotable.getDirection();
-    const angularVelocity = this.rotable.getAngularVelocity();
-    const directionsNumber = this.rotable.getDirectionsNumber();
+    let direction = this.rotable.getDirection();
+    let angularVelocity = this.rotable.getAngularVelocity();
+    let directionsNumber = this.rotable.getDirectionsNumber();
 
     if (!direction || typeof direction !== "number") {
       throw new Error(
-        "Попытка сдвинуть объект, у которого невозможно прочитать направление"
+        "Попытка повернуть объект, у которого невозможно прочитать направление"
       );
     }
 
     if (!angularVelocity || typeof angularVelocity !== "number") {
       throw new Error(
-        "Попытка сдвинуть объект, у которого невозможно прочитать угловую скорость"
+        "Попытка повернуть объект, у которого невозможно прочитать угловую скорость"
       );
     }
 
     if (!directionsNumber || typeof directionsNumber !== "number") {
       throw new Error(
-        "Попытка сдвинуть объект, у которого невозможно прочитать количество повоторот"
+        "Попытка повернуть объект, у которого невозможно прочитать количество повоторот"
       );
     }
 
