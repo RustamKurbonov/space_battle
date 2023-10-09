@@ -1,4 +1,6 @@
 import { Command } from "./Command";
+import { LoggerCommand } from "./LoggerCommand";
+import { Queue } from "./Queue";
 
 export class MacroCommand extends Command {
   cmds: Command[];
@@ -13,16 +15,27 @@ export class MacroCommand extends Command {
       throw new Error("В макро команде может быть только массив команд");
     }
 
-    for (let i = 0; i < this.cmds.length; i++) {
-      const cmd = this.cmds[i];
+    const queue = new Queue(this.cmds);
 
-      if (!cmd?.execute) {
+    while (!queue.isEmpty()) {
+      if (!queue.peek().execute) {
         throw new Error(
           "Попытка вызова метода execute команды, у которой метод отсутствует"
         );
       }
 
-      cmd.execute();
+      try {
+        queue.peek().execute();
+        queue.remove();
+      } catch (e) {
+        if (typeof e === "string") {
+          new LoggerCommand(e.toLocaleUpperCase()).execute();
+        } else if (e instanceof Error) {
+          new LoggerCommand(e.message).execute();
+        }
+
+        queue.injectEmpty();
+      }
     }
   }
 }
