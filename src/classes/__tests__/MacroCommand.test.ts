@@ -12,9 +12,9 @@ describe("MacroCommand", () => {
     new MacroCommand(cmds).execute();
   });
 
-  it("В макро команде может быть только массив команд", () => {
+  it("В макро команде может быть только массив команд", async () => {
     try {
-      new MacroCommand(undefined as unknown as Command[]).execute();
+      await new MacroCommand(undefined as unknown as Command[]).execute();
     } catch (error) {
       // eslint-disable-next-line jest/no-conditional-expect
       expect(error).not.toBeNull();
